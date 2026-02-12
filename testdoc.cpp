@@ -4,8 +4,6 @@
 
 using namespace std;
 
-//Fn + F5 to build and run
-
 /*
     This is a test file to test the cppdoc.h header file and its functions.
 
@@ -21,12 +19,13 @@ string function_example(int some_value, string other_value =    "default")
         DEF: A function that iterates through a string, but skips based off int value some_string.
 
         ARGS:
-            some_value: indexer //BUG
+            some_value:               
             other_value:     string being indexed
 
         RET: A modified value of the string.
 
         EX: function_example(2, "Hello World!") >>>HloWrd
+        EX: function_example(0, "Hello World!") >>> Hello World!
     */
 
    string return_value;
@@ -52,18 +51,8 @@ string other(     int   some_value =388  ,    string  other_value = "def") //spa
 }
 
 
-void function_name(int y = 3)
+void function_name()
 {
-    /*
-        DEF: idk
-
-        ARGS:
-            y: m
-        
-        RET: nothing
-
-        EX: function_name() >>> nothing
-    */
 }
 //NOTE: cppdoc requires the "DEF:" declaration to be documented at minimum, the other will autofill to "N/A" 
 //The function type, paramter types, and default variables will automatically be documented

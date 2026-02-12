@@ -10,24 +10,27 @@
 
 using namespace std;
 
-struct function
+namespace //anonymous ns to privatize struct
 {
-    string return_type;
-    string name;
+    struct function
+    {
+        string return_type;
+        string name;
 
-    vector<string> param_var_name;
-    vector<string> param_data_type;
-    vector<string> param_default;
+        vector<string> param_var_name;
+        vector<string> param_data_type;
+        vector<string> param_default;
 
-    string main_definition;
-    unordered_map<string, string> args;
-    string return_definition = "N/A";
-    vector<string> examples;
-};
+        string main_definition;
+        unordered_map<string, string> args;
+        string return_definition = "N/A";
+        vector<string> examples;
+    };
+}
 
 
 
-string format_line(string line)
+static string format_line(string line)
 {
     string temp = line;
 
@@ -44,7 +47,7 @@ string format_line(string line)
 
 
 
-void console_display(vector<function> fn_list)
+static void console_display(vector<function> fn_list)
 {
     for(function fn : fn_list)
     {
@@ -74,8 +77,8 @@ void console_display(vector<function> fn_list)
 }
 
 
-    //TODO IN v1.0 -> add href link to program origin
- void create_documentation(vector<function> fn_list, string file_name, size_t cpp_extension)
+    //TODO IN v1.0 -> add href link to program origin & CSS Formatting
+static void create_documentation(vector<function> fn_list, string file_name, size_t cpp_extension)
 {
     string program_name = file_name.substr(0, cpp_extension);
     string html_file_name = program_name + (".html");
@@ -83,7 +86,7 @@ void console_display(vector<function> fn_list)
     ofstream html_document(html_file_name);
     if(html_document.is_open())
     {
-            html_document <<
+            html_document <<    //HTML formatting & document titling
                 "<!DOCTYPE html>" "\n"
                 R"(<html lang="en">)" "\n"
                 "<head>" "\n"
@@ -92,38 +95,63 @@ void console_display(vector<function> fn_list)
                     "\t<title>" + program_name + "</title>\n"
                 "</head>" "\n\n"
                 "<body>" "\n"
-                    "\t<h1>" + program_name + "</h1>\n"
-                    "\t" R"(<h2 style="padding-left: 20px;">)" "Functions:</h2>\n";
+                    "\t<h1>" + program_name + "</h1>\n\n"
+                    "\t" R"(<h2 style="padding-left: 20px;">)" "Functions:</h2>";
             
             for(function fn : fn_list)
             {
-                html_document <<
+                html_document <<    //function headers & function section creation
                     "\n\t\t" R"(<section style="padding-left: 60px;">)" "\n"
                         "\t\t\t" R"(<h3 style="margin-bottom: -10px;">)" + fn.return_type + " " + fn.name + "(values)</h3>" "\n"
                         "\t\t\t" R"(<div style="padding-left: 30px;">)" "\n"
                             "\t\t\t\t" "<p>" + fn.main_definition + "</p>" "\n"
                             "\t\t\t\t" R"(<h4 style="margin-bottom: -10px;">Parameters:</h4>)" "\n"
                             "\t\t\t\t<ul>\n";
-                for(int i = 0; i < fn.param_var_name.size(); i++)
+
+                if(fn.param_var_name.size() == 0)   //for functions with no parameters
                 {
-                    string var_name = fn.param_var_name.at(i);
                     html_document << 
-                        "\t\t\t\t\t<li>\n" 
-                            "\t\t\t\t\t\t" R"(<p style="margin-bottom: -10px;">)" + fn.param_data_type.at(i) + " " + var_name +
-                            " (Default Value = " + fn.param_default.at(i) + ")</p>\n"
-                            "\t\t\t\t\t\t" R"(<p style="padding-left: 10px;">)" + fn.args.at(var_name) + "</p>\n"
-                         "\t\t\t\t\t</li>\n";
+                        "\t\t\t\t\t<li>\n"
+                        "\t\t\t\t\t\t<p>N/A</p>\n"
+                        "\t\t\t\t\t</li>\n";
                 }
-                html_document <<
+                else
+                {
+                    for(int i = 0; i < fn.param_var_name.size(); i++)   //parameter variable names, data types, default values, & their argument definitions
+                    {
+                        string var_name = fn.param_var_name.at(i);
+                        html_document << 
+                            "\t\t\t\t\t<li>\n" 
+                                "\t\t\t\t\t\t" R"(<p style="margin-bottom: -10px;">)" + fn.param_data_type.at(i) + " " + var_name +
+                                " (Default Value = " + fn.param_default.at(i) + ")</p>\n"
+                                "\t\t\t\t\t\t" R"(<p style="padding-left: 10px;">)" + fn.args.at(var_name) + "</p>\n"
+                            "\t\t\t\t\t</li>\n";
+                    }
+                }
+                html_document <<    //example(s) titling
+                    "\t\t\t\t</ul>\n\n\t\t\t\t<br>\n"
+                    "\t\t\t\t" R"(<h4 style="margin-bottom: -10px;">Examples:</h4>)" "\n"
+                    "\t\t\t\t<ul>\n";
+
+                if(fn.examples.size() == 0) fn.examples.push_back("N/A");   //example(s) definitions
+                for(int j = 0; j < fn.examples.size(); j++)
+                {
+                    html_document <<
+                        "\t\t\t\t\t<li>\n"
+                            "\t\t\t\t\t\t" R"(<p style="margin-bottom: -10px;">)" + fn.examples.at(j) + "</p>\n"
+                        "\t\t\t\t\t</li>\n";
+                }
+                
+                html_document <<    //closing section for function && spacing
                     "\t\t\t\t</ul>\n"
                     "\t\t\t</div>\n"
                     "\t\t</section>\n"
-                    "\t\t<br>\n";
+                    "\t\t<br><br>" << endl;
             }
                 
-            html_document <<        
-            "</body>" "\n"
-            "</html>";
+            html_document <<    //HTML close formatting
+                "</body>" "\n"
+                "</html>";
     }
     else
     {
@@ -135,7 +163,7 @@ void console_display(vector<function> fn_list)
 
 
 
-void inspect_declr(function &fn, string line)
+static void inspect_declr(function &fn, string line)
 {
     string temp = line;
     function inspecting_fn;
@@ -251,7 +279,7 @@ void smart_file_read(string file_name, bool activate_console, bool update_html) 
         int op_pos = -1;
         int cp_pos = -1;
         
-        // Works for iterating for functions on a global scope
+        // Works for iterating for functions on a global scope w/ parenthesis on same line (TODO: v0.9)
         for(int char_index = 0; char_index < line.length(); char_index++)
         {
             char current_char = line[char_index];
@@ -342,7 +370,6 @@ void smart_file_read(string file_name, bool activate_console, bool update_html) 
                     cerr << "!CPPDOC; EX block was declared before DEF in cppdoc comment\n";
                     throw invalid_argument("!CPPDOC; @smart_file_read() DEF @[" + function_declares.back() + "] == null");
                 }
-
                 functions.back().examples.push_back(format_line(line));
                 in_args = false;
             }
@@ -379,7 +406,7 @@ void smart_file_read(string file_name, bool activate_console, bool update_html) 
                 {
                     starting_index++;
                 } while(starting_index < line.length() && line[starting_index] == ' ');
-                arg_def = line.substr(starting_index);
+                arg_def = (starting_index == line.length()) ? "N/A" : line.substr(starting_index);
 
                 if (arg_var.length() == 0 || arg_var == " ")
                 {
