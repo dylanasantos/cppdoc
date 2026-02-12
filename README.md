@@ -1,91 +1,54 @@
-# cppdoc
-Stemming off the concept of the pydoc library. cppdoc is meant to read function comments created by users in a neat formatting, which automates HTML documentation of the intended functions.
+cppdoc:
+  cppdoc is a C++ function declaration documenter based off of programs such as Doxygen or pydoc. cppdoc reads the given program as a text file and will navigate through all function definitions (with the exception of main), along with their additional cppdoc comments, annd will display these functions on an HTML-Style format.
 
-As cppdoc is developed, it will become smarter & more able to detect cppdoc comments off the syntax of multi-lined comments inside functions.
-
-IMPROTANT FUNCTION CALLS:
-
-  smart_file_read(file_name = "main.cpp", activate_console = false, update_html = true)
-    Reads input file as a text file, and will detect cppdoc comments based off the syntax of multi-lined comments inside of function definitions. As cppdoc develops, detection of cppdoc comments is meant to become smarter (considering fucntions inside classes, structs, etc), and optomized. Here's an example of a function smart_file_read() would work on:
-
-    string function_example(int x, string y = "default")
+  cppdoc format:
+  
+    string function_example(int some_value, string other_value = "default")
     {
         /*
-            DEF: function definition
-
-            RET: string skipping every x amount of characters the user inputs
-
-            EX: function_example(2, "hello world") >>> hlwl
-        */
-        string temp;
-          //code block
-        return temp;
-    }
-
-    //in main
-    int main()
-    {
-        smart_file_read("example.cpp");
-
-        return 0;
-    }
-
-  NOTE: RET and EX are optional inputs, cppdoc will document the function as long as "DEF" is defined, if RET and EX are not defined, then RET will autofill with the given data type, and EX: will autofill with N/A. If inputting EX, make sure to include ">>>" so cppdoc understands the return, and multiple EX: lines can be made.
-
-
-  direct_file_read(file_name = "main.cpp", title_inclusive = false, activate_console = false, update_html = true)
-    Reads input file as text file, and will detect cppdoc comments based off those that have !CPPDOC written inside them, this allows for the exact file reading you want or expect when smart_file_read() doesnt provide properly. For direct_file_read(), the comment should be underneath the desired function. Spacing is allowed, but no characters should interfere between the declaration and the comment. 
+            DEF: A function that iterates through a string, but skips based off int value some_string.
     
-    string function_example(int x, string y = "default")
-    {
-        /*
-            !CPPDOC
-            DEF: function definition
-
-            RET: string skipping every x amount of characters the user inputs
-
-            EX: function_example(2, "hello world") >>> hlwl
-        */
-        string temp;
-          //code block
-        return temp;
-    }
-
-    //in main
-    int main()
-    {
-        direct_file_read("example.cpp");
-
-        return 0;
-    }
-  There may be a unexpected scenario where cppdoc does not properly read the function. If this is the case, set the title_inclsuive variable to "true", then define your cppdoc comment as such:
+            ARGS:
+                some_value: indexer
+                other_value:     string being indexed
     
-    string function_example(int x, string y = "default")
-    {
-        /*
-            !CPPDOC
-            string function_example(int x, string y = "default")
-            DEF: function definition
-
-            RET: string skipping every x amount of characters the user inputs
-
-            EX: function_example(2, "hello world") >>> hlwl
+            RET: A modified value of the string.
+    
+            EX: function_example(2, "Hello World!") >>>HloWrd
+            EX: function_example(0, "Hello World!") >>> Hello World!
         */
-        string temp;
-          //code block
-        return temp;
+    
+       string return_value;
+       return return_value;
     }
 
-    //in main
-    int main()
-    {
-        direct_file_read("example.cpp", true);
+  cppdoc is meant to be a flexible, yet syntax-focused documenter. There are tokens for documentation similar to other formaters such aspydoc, as shown above: "DEF", "ARGS", "RET", and "EX". While the user has the option to define (or not define) any and all of these 4 blocks in a fucntion, cppdoc requires a "DEF" block if any other block is included, and no block can repeat other than "EX".
 
-        return 0;
-    }
+  When declaring an ARGS block, atleast one variable is required with a proper definition, however cppdoc will not check for the validity of the variable you store.
 
-  cppdoc is intended to be able to read all functional syntax. However, if the user adds multiple DEF or RET blocks underneath either file_read() functions, an error will be thrown on runtime to imrpove documentation understanding and formatting.
+  While cppdoc is considerate of whitespace, early versions of this program will rely on the smart_file_read() function which can arise potential, undiscovered bugs. In later versions, type_cast_file_read() will become available, along with input_file().
 
-  cppdoc comes with a very standard HTML formatting style, but further down in development, multiple HTML presets will be offered to the user.
 
-  For debugging purposes, cppdoc also gives you the option to print out to the console. Console printing is activated by the activate_console variable in both read functions. When activate_console is set to true, cppdoc will update HTML files still, if you do not want to update the HTML files, set update_html to false.
+  Difference in function calls:
+
+  smart_file_read(string file_name = "main.cpp", bool activate_console = false, bool update_html = true):
+    Reads entire program, looks for standard function definition pattern, if a full pattern is met, the function becomes documented. Requires a file name (or searches for a main.cpp file), has the ability for users to print out their documentation to the shell, and the ability to enable/disable html documentation updates.
+
+  type_cast_file_read(): //TBD: v0.9
+    Reads the entire program, looking for commennts specifically marked with "!CPPDOC", then documents them with their respective information.
+
+  input_file(): //TBD: v0.9
+    Reads a requested file through the console.
+
+  Later versions of cppdoc will come with more editing options on documentation style, ontop of progrsam optimisations, and more inclusive formatting (such as JSON).
+
+
+How it works:
+  cppdoc iterates through any .cpp file, searching for function declarations, storing each function in a struct data type called function, which are then located inside a vector. For smart_file_read(), the program will search line by line top to bottom looking for both an opening, and closing parenthesis on the same line. If a line meets this criteria, it is stored as a possible function string. If an opening brace is found after its declaration, then the string will be pushed into a vector for later formatting. Given another set of parenthesis is found before the declaration of an opening bracket, cppdoc will replace the possible function string with the new line.
+  
+  Once all strings have been recovered, cppdoc will then reformat each string given in order to properly fit each value into its respective function struct. This includes autofilling certain pieces of data with N/A that have not been filled.
+  
+  Afterwards, cppdoc will check if there was a request for console printing, and HTML documenting. If cppdoc is requested to document an HTML file, it will take the name of the program given, and create a .html extension, which will then manually format the html code through strings, allowing for better source code readability, and flexibility.
+
+[ABOUT VERSION 0.8]
+Version 0.8 does not come with all intended packages & optimizations, version 0.9 will come with more catch case scenarios & options, however cppdoc v0.8 is able to handle most common cases you will find in function declarations.
