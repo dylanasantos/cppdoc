@@ -31,13 +31,13 @@
 
   **Difference in function calls:**
 
-  smart_file_read(string file_name = "main.cpp", bool activate_console = false, bool update_html = true):
+  **smart_file_read(string file_name = "main.cpp", bool activate_console = false, bool update_html = true):**
     Reads entire program, looks for standard function definition pattern, if a full pattern is met, the function becomes documented. Requires a file name (or searches for a main.cpp file), has the ability for users to print out their documentation to the shell, and the ability to enable/disable html documentation updates.
 
-  type_cast_file_read(): //TBD: v0.9
+  **type_cast_file_read():** //TBD: v0.9
     Reads the entire program, looking for commennts specifically marked with "!CPPDOC", then documents them with their respective information.
 
-  input_file(): //TBD: v0.9
+  **input_file():** //TBD: v0.9
     Reads a requested file through the console.
 
   Later versions of cppdoc will come with more editing options on documentation style, ontop of progrsam optimisations, and more inclusive formatting (such as JSON).
@@ -50,5 +50,5 @@
   
   Afterwards, cppdoc will check if there was a request for console printing, and HTML documenting. If cppdoc is requested to document an HTML file, it will take the name of the program given, and create a .html extension, which will then manually format the html code through strings, allowing for better source code readability, and flexibility.
 
-[ABOUT VERSION 0.8]
+**[ABOUT VERSION 0.8]**
 Version 0.8 does not come with all intended packages & optimizations, version 0.9 will come with more catch case scenarios & options, however cppdoc v0.8 is able to handle most common cases you will find in function declarations.
