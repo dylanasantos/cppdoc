@@ -1,4 +1,4 @@
-cppdoc:
+**cppdoc:**
   cppdoc is a C++ function declaration documenter based off of programs such as Doxygen or pydoc. cppdoc reads the given program as a text file and will navigate through all function definitions (with the exception of main), along with their additional cppdoc comments, annd will display these functions on an HTML-Style format.
 
   cppdoc format:
@@ -29,7 +29,7 @@ cppdoc:
   While cppdoc is considerate of whitespace, early versions of this program will rely on the smart_file_read() function which can arise potential, undiscovered bugs. In later versions, type_cast_file_read() will become available, along with input_file().
 
 
-  Difference in function calls:
+  **Difference in function calls:**
 
   smart_file_read(string file_name = "main.cpp", bool activate_console = false, bool update_html = true):
     Reads entire program, looks for standard function definition pattern, if a full pattern is met, the function becomes documented. Requires a file name (or searches for a main.cpp file), has the ability for users to print out their documentation to the shell, and the ability to enable/disable html documentation updates.
@@ -43,7 +43,7 @@ cppdoc:
   Later versions of cppdoc will come with more editing options on documentation style, ontop of progrsam optimisations, and more inclusive formatting (such as JSON).
 
 
-How it works:
+**How it works:**
   cppdoc iterates through any .cpp file, searching for function declarations, storing each function in a struct data type called function, which are then located inside a vector. For smart_file_read(), the program will search line by line top to bottom looking for both an opening, and closing parenthesis on the same line. If a line meets this criteria, it is stored as a possible function string. If an opening brace is found after its declaration, then the string will be pushed into a vector for later formatting. Given another set of parenthesis is found before the declaration of an opening bracket, cppdoc will replace the possible function string with the new line.
   
   Once all strings have been recovered, cppdoc will then reformat each string given in order to properly fit each value into its respective function struct. This includes autofilling certain pieces of data with N/A that have not been filled.
