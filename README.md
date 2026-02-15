@@ -1,5 +1,5 @@
 **cppdoc:**
-  cppdoc is a C++ function declaration documenter based off of programs such as Doxygen or pydoc. cppdoc reads the given program as a text file and will navigate through all function definitions (with the exception of main), along with their additional cppdoc comments, annd will display these functions on an HTML-Style format.
+  cppdoc is a C++ function declaration documenter based off of programs such as Doxygen or pydoc. cppdoc reads the given program as a text file and will navigate through all function definitions (with the exception of main), along with their additional cppdoc comments, and will display these functions on an HTML-Style format.
 
   cppdoc format:
   
